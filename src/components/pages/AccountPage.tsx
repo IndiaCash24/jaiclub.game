@@ -1,5 +1,24 @@
-import React from 'react';
-import { User, Shield, Wallet, Globe, Award, HelpCircle, LogOut, ChevronRight, ArrowLeft, History, Bell, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  User, 
+  Shield, 
+  Copy, 
+  RefreshCw, 
+  ChevronRight, 
+  ArrowLeft, 
+  FileText, 
+  History, 
+  Bell, 
+  Gift, 
+  BarChart3, 
+  Globe, 
+  Bot, 
+  ArrowDownLeft, 
+  ArrowUpRight, 
+  Crown, 
+  Wallet as WalletIcon,
+  Check
+} from 'lucide-react';
 import { UserState } from '../../types';
 
 interface AccountPageProps {
@@ -7,6 +26,7 @@ interface AccountPageProps {
   onBack: () => void;
   onOpenWallet: () => void;
   onToggleLanguage: () => void;
+  onOpenAdmin: () => void;
 }
 
 export const AccountPage: React.FC<AccountPageProps> = ({
@@ -14,108 +34,306 @@ export const AccountPage: React.FC<AccountPageProps> = ({
   onBack,
   onOpenWallet,
   onToggleLanguage,
+  onOpenAdmin,
 }) => {
+  const [copied, setCopied] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleCopyUid = () => {
+    navigator.clipboard.writeText(user.id.toString());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleRefreshBalance = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 800);
+  };
+
   return (
-    <div className="min-h-screen bg-[#0A0418] text-slate-100 pb-24">
-      {/* Top Header */}
-      <div className="sticky top-0 z-30 bg-[#12082B]/95 backdrop-blur-md px-4 py-3 border-b border-purple-500/20 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-[#0C071E] text-slate-100 pb-28 font-sans select-none relative">
+      
+      {/* 1. TOP HEADER BANNER CARD WITH CORAL PINK TO SKY BLUE GRADIENT */}
+      <div className="relative bg-gradient-to-r from-[#FF5E80] via-[#A855F7] to-[#38BDF8] pt-4 pb-8 px-4 shadow-[0_10px_25px_rgba(255,94,128,0.25)]">
+        
+        {/* Top Back Arrow */}
+        <div className="flex items-center justify-between mb-3">
           <button
             onClick={onBack}
-            className="p-2 rounded-xl bg-purple-950/80 text-purple-200 border border-purple-500/30 hover:text-white"
+            className="p-1.5 rounded-full text-white/90 hover:text-white hover:bg-black/10 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <div>
-            <h1 className="text-base font-black italic tracking-wider gold-metallic-text uppercase">
-              Player Account & Settings
-            </h1>
-            <p className="text-[11px] text-purple-300">VIP Badge, Security & Personal Details</p>
-          </div>
+          
+          <h1 className="text-lg font-bold text-white tracking-wide">My Profile</h1>
+
+          <div className="w-6" />
         </div>
 
-        <button
-          onClick={onToggleLanguage}
-          className="text-xs font-black text-amber-300 bg-amber-950/80 px-2.5 py-1 rounded-full border border-amber-500/40"
-        >
-          🌐 {user.language}
-        </button>
+        {/* User Identity Info Row */}
+        <div className="flex items-center gap-3">
+          
+          {/* Avatar Circle */}
+          <div className="relative w-16 h-16 rounded-full border-2 border-white/80 overflow-hidden shadow-lg flex-shrink-0 bg-purple-950">
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+              alt="User Avatar"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=200&auto=format&fit=crop&q=80';
+              }}
+            />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            {/* Username & VIP Badge */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-black text-white truncate tracking-tight">
+                {user.username || 'MEMBERNNGRAJNW'}
+              </h2>
+              <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full border border-white/60 shadow-sm flex items-center gap-1">
+                <Crown className="w-3 h-3 text-amber-950 fill-amber-950" /> VIP{user.vipLevel || 0}
+              </span>
+            </div>
+
+            {/* UID Copy Button Pill */}
+            <div className="mt-1 inline-flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-2.5 py-0.5 rounded-full text-white text-[11px] font-mono border border-white/30">
+              <span>UID | {user.id || '2460172'}</span>
+              <button
+                onClick={handleCopyUid}
+                className="hover:scale-110 active:scale-95 transition-transform"
+                title="Copy UID"
+              >
+                {copied ? <Check className="w-3 h-3 text-emerald-300" /> : <Copy className="w-3 h-3 text-white/80" />}
+              </button>
+            </div>
+
+            {/* Timestamp */}
+            <p className="text-[10px] text-white/80 mt-1 font-medium">
+              Last login: 2026-08-04 02:58:23
+            </p>
+          </div>
+
+        </div>
+
       </div>
 
-      <div className="p-4 space-y-5">
-        {/* User Identity Card */}
-        <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-950 rounded-2xl p-5 border border-purple-400/30 shadow-xl relative overflow-hidden">
-          <div className="flex items-center gap-3.5">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 p-0.5 shadow-[0_0_15px_rgba(255,193,7,0.8)] flex-shrink-0">
-              <div className="w-full h-full rounded-full bg-[#1A0B3F] flex items-center justify-center text-2xl font-black gold-metallic-text">
-                👤
-              </div>
-            </div>
-
+      {/* 2. OVERLAY MAIN DARK CONTAINER */}
+      <div className="px-3.5 -mt-4 space-y-4 max-w-[480px] mx-auto relative z-10">
+        
+        {/* TOTAL BALANCE & QUICK ACTION ROW CARD */}
+        <div className="bg-[#181031] border border-purple-500/30 rounded-3xl p-4 shadow-xl space-y-4">
+          
+          {/* Balance Header */}
+          <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-black text-white">{user.username}</h2>
-                <span className="text-[10px] font-extrabold gold-metallic-btn text-slate-950 px-2 py-0.5 rounded-full">
-                  VIP {user.vipLevel}
+              <span className="text-xs text-purple-300 font-semibold block">Total balance</span>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-2xl font-black text-white tracking-tight">
+                  ₹{user.balance.toFixed(2)}
                 </span>
+                <button
+                  onClick={handleRefreshBalance}
+                  className={`p-1 rounded-full text-purple-300 hover:text-white transition-transform ${
+                    isRefreshing ? 'animate-spin text-amber-400' : ''
+                  }`}
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
               </div>
-              <p className="text-xs text-purple-300">UID: {user.id}</p>
-              <p className="text-[11px] text-emerald-400 font-semibold mt-0.5">Verified Member</p>
             </div>
           </div>
+
+          {/* Quick Action Icons Row */}
+          <div className="grid grid-cols-4 gap-2 text-center pt-2 border-t border-purple-500/20">
+            
+            {/* ARWallet */}
+            <button
+              onClick={onOpenWallet}
+              className="flex flex-col items-center gap-1.5 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-md transition-transform group-active:scale-90">
+                <WalletIcon className="w-6 h-6 text-white stroke-[2.2]" />
+              </div>
+              <span className="text-[11px] font-semibold text-purple-200">ARWallet</span>
+            </button>
+
+            {/* Deposit */}
+            <button
+              onClick={onOpenWallet}
+              className="flex flex-col items-center gap-1.5 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md transition-transform group-active:scale-90">
+                <ArrowDownLeft className="w-6 h-6 text-slate-950 stroke-[2.5]" />
+              </div>
+              <span className="text-[11px] font-semibold text-purple-200">Deposit</span>
+            </button>
+
+            {/* Withdraw */}
+            <button
+              onClick={onOpenWallet}
+              className="flex flex-col items-center gap-1.5 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-md transition-transform group-active:scale-90">
+                <ArrowUpRight className="w-6 h-6 text-white stroke-[2.5]" />
+              </div>
+              <span className="text-[11px] font-semibold text-purple-200">Withdraw</span>
+            </button>
+
+            {/* VIP */}
+            <button
+              onClick={() => alert(`VIP Level ${user.vipLevel} Active! Higher deposit levels unlock daily rebates.`)}
+              className="flex flex-col items-center gap-1.5 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-md transition-transform group-active:scale-90">
+                <Crown className="w-6 h-6 text-white stroke-[2.2]" />
+              </div>
+              <span className="text-[11px] font-semibold text-purple-200">VIP</span>
+            </button>
+
+          </div>
+
         </div>
 
-        {/* Balance & Financial Quick Actions */}
-        <div className="bg-gradient-to-br from-[#1C0E42] to-[#12072E] rounded-2xl p-4 border border-purple-500/30 flex items-center justify-between">
-          <div>
-            <span className="text-xs font-bold text-purple-300 uppercase tracking-widest">Total Net Balance</span>
-            <div className="text-2xl font-black text-amber-300 gold-metallic-text">₹{user.balance.toFixed(2)}</div>
-          </div>
+        {/* 3. 2x2 GRID SECTION (GAME HISTORY, TRANSACTION, DEPOSIT, WITHDRAW) */}
+        <div className="grid grid-cols-2 gap-3">
+          
+          {/* Game History */}
+          <button
+            onClick={() => alert('Opening Game History Logs')}
+            className="bg-[#181031] border border-purple-500/25 rounded-2xl p-3.5 flex items-center gap-3 active:scale-98 transition-transform text-left"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <BarChart3 className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Game History</div>
+              <div className="text-[10px] text-purple-300">My game history</div>
+            </div>
+          </button>
 
+          {/* Transaction */}
+          <button
+            onClick={() => alert('Opening Transaction History Logs')}
+            className="bg-[#181031] border border-purple-500/25 rounded-2xl p-3.5 flex items-center gap-3 active:scale-98 transition-transform text-left"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <FileText className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Transaction</div>
+              <div className="text-[10px] text-purple-300">My transaction history</div>
+            </div>
+          </button>
+
+          {/* Deposit */}
           <button
             onClick={onOpenWallet}
-            className="px-4 py-2.5 rounded-xl gold-metallic-btn text-slate-950 font-black text-xs uppercase shadow-[0_0_12px_rgba(255,193,7,0.6)] active:scale-95 transition-all"
+            className="bg-[#181031] border border-purple-500/25 rounded-2xl p-3.5 flex items-center gap-3 active:scale-98 transition-transform text-left"
           >
-            Deposit / Withdraw
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <ArrowDownLeft className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Deposit</div>
+              <div className="text-[10px] text-purple-300">My deposit history</div>
+            </div>
           </button>
+
+          {/* Withdraw */}
+          <button
+            onClick={onOpenWallet}
+            className="bg-[#181031] border border-purple-500/25 rounded-2xl p-3.5 flex items-center gap-3 active:scale-98 transition-transform text-left"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <ArrowUpRight className="w-5 h-5 text-slate-950" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Withdraw</div>
+              <div className="text-[10px] text-purple-300">My withdraw history</div>
+            </div>
+          </button>
+
         </div>
 
-        {/* Security & Account Settings Options */}
-        <div className="bg-gradient-to-br from-[#1C0E42] to-[#12072E] rounded-2xl p-4 border border-purple-500/30 space-y-2">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-2">Account Management</h3>
+{/* Admin button hidden as requested */}
 
-          {[
-            { label: 'Betting & Game History Logs', icon: History, action: () => alert('Showing recent bets history') },
-            { label: 'Login & Withdrawal Password', icon: Lock, action: () => alert('Password Settings') },
-            { label: 'App Notifications & Alerts', icon: Bell, action: () => alert('Notification Preferences') },
-            { label: '24/7 Live Customer Support', icon: HelpCircle, action: () => alert('Connecting to Live Agent...') },
-          ].map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={idx}
-                onClick={item.action}
-                className="w-full p-3 rounded-xl bg-[#221252] border border-purple-500/20 flex items-center justify-between text-xs font-bold text-purple-200 hover:text-white hover:border-purple-400 active:scale-98 transition-all"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Icon className="w-4 h-4 text-amber-400" />
-                  <span>{item.label}</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-purple-400" />
-              </button>
-            );
-          })}
+        {/* 5. LIST MENU OPTIONS SECTION */}
+        <div className="bg-[#181031] border border-purple-500/25 rounded-3xl overflow-hidden divide-y divide-purple-500/20">
+          
+          {/* Notification */}
+          <button
+            onClick={() => alert('Notifications: Welcome to JAI CLUB! Get ₹488 bonus on first deposit.')}
+            className="w-full p-4 flex items-center justify-between text-purple-200 hover:text-white hover:bg-purple-900/30 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-900/50 flex items-center justify-center text-purple-300">
+                <Bell className="w-5 h-5 text-purple-400" />
+              </div>
+              <span className="text-xs font-bold text-white">Notification</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-purple-400" />
+          </button>
+
+          {/* Gifts */}
+          <button
+            onClick={() => alert('Gifts section: Claim your daily spin & bonus codes here.')}
+            className="w-full p-4 flex items-center justify-between text-purple-200 hover:text-white hover:bg-purple-900/30 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-900/50 flex items-center justify-center text-purple-300">
+                <Gift className="w-5 h-5 text-pink-400" />
+              </div>
+              <span className="text-xs font-bold text-white">Gifts</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-purple-400" />
+          </button>
+
+          {/* Game statistics */}
+          <button
+            onClick={() => alert('Game statistics: Win Rate 94.2%, Total Rounds 128')}
+            className="w-full p-4 flex items-center justify-between text-purple-200 hover:text-white hover:bg-purple-900/30 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-900/50 flex items-center justify-center text-purple-300">
+                <BarChart3 className="w-5 h-5 text-sky-400" />
+              </div>
+              <span className="text-xs font-bold text-white">Game statistics</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-purple-400" />
+          </button>
+
+          {/* Language */}
+          <button
+            onClick={onToggleLanguage}
+            className="w-full p-4 flex items-center justify-between text-purple-200 hover:text-white hover:bg-purple-900/30 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-900/50 flex items-center justify-center text-purple-300">
+                <Globe className="w-5 h-5 text-cyan-400" />
+              </div>
+              <span className="text-xs font-bold text-white">Language</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-purple-300 font-semibold">
+              <span>{user.language === 'HI' ? 'हिंदी' : 'English'}</span>
+              <ChevronRight className="w-4 h-4 text-purple-400" />
+            </div>
+          </button>
+
         </div>
-
-        {/* Logout Button */}
-        <button
-          onClick={() => alert('Logged out successfully.')}
-          className="w-full py-3.5 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-300 font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-rose-900/80 active:scale-95 transition-all"
-        >
-          <LogOut className="w-4 h-4" /> Log Out Account
-        </button>
 
       </div>
+
+      {/* FLOATING BOT CUSTOMER SERVICE WIDGET AT BOTTOM RIGHT */}
+      <button
+        onClick={() => alert('Connecting to 24/7 AI Customer Assistant...')}
+        className="fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 border-2 border-white/80 p-0.5 shadow-[0_0_20px_rgba(56,189,248,0.7)] hover:scale-110 active:scale-95 transition-transform flex items-center justify-center"
+      >
+        <div className="w-full h-full rounded-full bg-[#12082C] flex items-center justify-center text-cyan-300">
+          <Bot className="w-6 h-6 text-cyan-300 filter drop-shadow-[0_0_6px_rgba(56,189,248,0.9)]" />
+        </div>
+      </button>
+
     </div>
   );
 };
