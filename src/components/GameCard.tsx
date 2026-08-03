@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GameItem } from '../types';
 import { Play } from 'lucide-react';
 
@@ -8,6 +8,8 @@ interface GameCardProps {
 }
 
 export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+
   return (
     <div
       onClick={() => onPlayGame(game)}
@@ -18,15 +20,28 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         
         {/* Display ONLY the game image when imageUrl is present */}
         {game.imageUrl ? (
-          <img
-            src={game.imageUrl}
-            alt=""
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-108"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/src/assets/images/purple_3d_diamond_1785787118017.jpg';
-            }}
-          />
+          <div className="relative w-full h-full">
+            {/* Gray loading shadow / skeleton placeholder when network is slow */}
+            {!imgLoaded && (
+              <div className="absolute inset-0 bg-slate-800/90 animate-pulse rounded-2xl flex flex-col items-center justify-center gap-2 p-2 z-10">
+                <div className="w-7 h-7 rounded-full border-2 border-slate-600 border-t-amber-400 animate-spin" />
+                <div className="w-12 h-2 bg-slate-700/80 rounded-full animate-pulse" />
+              </div>
+            )}
+            <img
+              src={game.imageUrl}
+              alt=""
+              referrerPolicy="no-referrer"
+              onLoad={() => setImgLoaded(true)}
+              onError={(e) => {
+                setImgLoaded(true);
+                (e.target as HTMLImageElement).src = '/src/assets/images/purple_3d_diamond_1785787118017.jpg';
+              }}
+              className={`w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-108 ${
+                imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+              }`}
+            />
+          </div>
         ) : null}
 
         {/* THEME 1: AVIATOR DARK (Pure Jet graphic - NO TEXT) */}

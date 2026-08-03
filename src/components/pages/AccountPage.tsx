@@ -38,6 +38,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   const handleCopyUid = () => {
     navigator.clipboard.writeText(user.id.toString());
@@ -74,14 +75,23 @@ export const AccountPage: React.FC<AccountPageProps> = ({
         <div className="flex items-center gap-3">
           
           {/* Avatar Circle */}
-          <div className="relative w-16 h-16 rounded-full border-2 border-white/80 overflow-hidden shadow-lg flex-shrink-0 bg-purple-950">
+          <div className="relative w-16 h-16 rounded-full border-2 border-white/80 overflow-hidden shadow-lg flex-shrink-0 bg-slate-800">
+            {!avatarLoaded && (
+              <div className="absolute inset-0 bg-slate-800 animate-pulse rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full border-2 border-slate-600 border-t-amber-300 animate-spin" />
+              </div>
+            )}
             <img
               src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
               alt="User Avatar"
-              className="w-full h-full object-cover"
+              onLoad={() => setAvatarLoaded(true)}
               onError={(e) => {
+                setAvatarLoaded(true);
                 (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=200&auto=format&fit=crop&q=80';
               }}
+              className={`w-full h-full object-cover transition-opacity duration-300 ${
+                avatarLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
             />
           </div>
 

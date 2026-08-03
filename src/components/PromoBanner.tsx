@@ -12,14 +12,17 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
 
+  const [bannerLoaded, setBannerLoaded] = useState(false);
+
   // Auto carousel slide rotation based on actual banners length
   useEffect(() => {
+    setBannerLoaded(false);
     if (!banners || banners.length <= 1) return;
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % banners.length);
     }, 3500);
     return () => clearInterval(interval);
-  }, [banners]);
+  }, [banners, activeSlide]);
 
   // Ensure activeSlide doesn't exceed bounds if banners array shrinks
   const safeSlideIndex = activeSlide >= banners.length ? 0 : activeSlide;
@@ -31,16 +34,29 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
       <div className="relative w-full overflow-hidden rounded-2xl bg-[#12072B] border border-purple-500/30 shadow-[0_8px_25px_rgba(0,0,0,0.6)] group">
         
         {/* Banner Display Container */}
-        <div className="relative w-full h-36 sm:h-44 overflow-hidden flex items-center justify-center bg-gradient-to-r from-purple-950 via-indigo-950 to-slate-950">
+        <div className="relative w-full h-36 sm:h-44 overflow-hidden flex items-center justify-center bg-slate-900">
+          
+          {/* Gray Loading Shadow Skeleton for Banner */}
+          {!bannerLoaded && (
+            <div className="absolute inset-0 bg-slate-800/90 animate-pulse flex flex-col items-center justify-center gap-2 z-10">
+              <div className="w-8 h-8 rounded-full border-2 border-slate-600 border-t-amber-400 animate-spin" />
+              <div className="w-24 h-3 bg-slate-700/80 rounded-full animate-pulse" />
+            </div>
+          )}
+
           <img
             key={safeSlideIndex}
             src={currentBannerUrl}
             alt=""
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover transition-all duration-500 ease-in-out"
+            onLoad={() => setBannerLoaded(true)}
             onError={(e) => {
+              setBannerLoaded(true);
               (e.target as HTMLImageElement).src = '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
             }}
+            className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
+              bannerLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
           />
         </div>
 
