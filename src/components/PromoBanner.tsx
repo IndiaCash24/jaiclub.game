@@ -14,10 +14,12 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   // Auto carousel slide rotation based on actual banners length
   useEffect(() => {
     setBannerLoaded(false);
+    setHasError(false);
     if (!banners || banners.length <= 1) return;
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % banners.length);
@@ -37,32 +39,45 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
         {/* Banner Display Container */}
         <div className="relative w-full h-36 sm:h-44 overflow-hidden flex items-center justify-center bg-slate-900">
           
-          {/* Gray Loading Shadow Skeleton for Banner */}
-          {!bannerLoaded && (
-            <div className="absolute inset-0 bg-slate-800/90 animate-pulse flex flex-col items-center justify-center gap-2 z-10">
-              <div className="w-8 h-8 rounded-full border-2 border-slate-600 border-t-amber-400 animate-spin" />
-              <div className="w-24 h-3 bg-slate-700/80 rounded-full animate-pulse" />
+          {/* Blinking Glowing Shadow Skeleton for Banner */}
+          {!bannerLoaded && !hasError && (
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/60 via-indigo-950/90 to-purple-900/60 animate-pulse border border-purple-500/40 shadow-[0_0_25px_rgba(168,85,247,0.6)] flex flex-col items-center justify-center gap-2 z-10">
+              <div className="w-8 h-8 rounded-full border-2 border-purple-400/40 border-t-amber-400 animate-spin shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
+              <div className="w-24 h-3 bg-purple-500/40 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
             </div>
           )}
 
-          <img
-            key={safeSlideIndex}
-            src={currentBannerUrl}
-            alt=""
-            decoding="async"
-            loading="eager"
-            onLoad={() => setBannerLoaded(true)}
-            onError={(e) => {
-              setBannerLoaded(true);
-              const target = e.target as HTMLImageElement;
-              if (target.src !== window.location.origin + DEFAULT_FALLBACK_IMAGE) {
-                target.src = DEFAULT_FALLBACK_IMAGE;
-              }
-            }}
-            className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
-              bannerLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
+          {hasError ? (
+            <div className="w-full h-full bg-gradient-to-r from-amber-900 via-purple-950 to-indigo-950 p-4 flex items-center justify-between border border-amber-500/30 shadow-[0_0_25px_rgba(245,158,11,0.4)]">
+              <div className="flex flex-col gap-1">
+                <div className="text-amber-400 font-extrabold text-lg flex items-center gap-1.5">
+                  <Sparkles className="w-5 h-5 text-amber-300 animate-spin" /> JAI CLUB SPECIAL BONUS
+                </div>
+                <div className="text-xs text-purple-200">100% Welcome Cashback & Daily Rewards</div>
+              </div>
+              <div className="text-3xl animate-bounce">🎁</div>
+            </div>
+          ) : (
+            <img
+              key={safeSlideIndex}
+              src={currentBannerUrl}
+              alt=""
+              decoding="async"
+              loading="eager"
+              onLoad={() => setBannerLoaded(true)}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (target.src !== window.location.origin + DEFAULT_FALLBACK_IMAGE && !target.src.endsWith(DEFAULT_FALLBACK_IMAGE)) {
+                  target.src = DEFAULT_FALLBACK_IMAGE;
+                } else {
+                  setHasError(true);
+                  setBannerLoaded(true);
+                }
+              }}
+              style={{ display: bannerLoaded ? 'block' : 'none' }}
+              className="w-full h-full object-cover transition-all duration-500 ease-in-out shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+            />
+          )}
         </div>
 
         {/* Carousel Indicator Dots (Only if multiple banners) */}

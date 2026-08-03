@@ -21,6 +21,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { GameItem, CategoryId } from '../../types';
+import { normalizeImageUrl, DEFAULT_DIAMOND_IMAGE } from '../../utils/imageUtils';
 
 interface AdminDashboardPageProps {
   games: GameItem[];
@@ -355,12 +356,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </span>
                 <div className="w-full max-w-sm mx-auto h-56 rounded-2xl bg-black/60 border border-purple-500/40 overflow-hidden relative flex items-center justify-center p-2 shadow-inner">
                   <img
-                    src={editingPopupInput || welcomePopupUrl}
-                    alt="Welcome Preview"
-                    referrerPolicy="no-referrer"
+                    src={normalizeImageUrl(editingPopupInput || welcomePopupUrl)}
+                    alt=""
+                    decoding="async"
+                    loading="eager"
                     className="max-h-full max-w-full object-contain rounded-xl"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/vault_gold_bonus_1785787230279.jpg';
+                      (e.target as HTMLImageElement).src = normalizeImageUrl('/images/vault_gold_bonus_1785787230279.jpg');
                     }}
                   />
                   <div className="absolute top-3 right-3 p-1.5 bg-red-600 rounded-full text-white text-xs font-bold shadow-md">
@@ -458,12 +460,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     {/* Preview Image */}
                     <div className="w-full h-28 rounded-xl bg-[#0A0318] border border-purple-500/40 overflow-hidden flex items-center justify-center relative">
                       <img
-                        src={bannerUrl}
-                        alt={`Banner ${index + 1}`}
-                        referrerPolicy="no-referrer"
+                        src={normalizeImageUrl(bannerUrl)}
+                        alt=""
+                        decoding="async"
+                        loading="eager"
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/vault_gold_bonus_1785787230279.jpg';
+                          (e.target as HTMLImageElement).src = normalizeImageUrl('/images/vault_gold_bonus_1785787230279.jpg');
                         }}
                       />
                     </div>
@@ -597,13 +600,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       <div className="w-20 h-24 rounded-xl bg-[#0A0318] border border-purple-500/40 overflow-hidden flex flex-col items-center justify-center flex-shrink-0 relative">
                         {currentInputValue ? (
                           <img
-                            src={currentInputValue}
-                            alt={game.title}
-                            referrerPolicy="no-referrer"
+                            src={normalizeImageUrl(currentInputValue)}
+                            alt=""
+                            decoding="async"
+                            loading="eager"
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               // Fallback on broken URL
-                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=300&auto=format&fit=crop&q=80';
+                              (e.target as HTMLImageElement).src = normalizeImageUrl(DEFAULT_DIAMOND_IMAGE);
                             }}
                           />
                         ) : (

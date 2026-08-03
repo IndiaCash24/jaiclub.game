@@ -29,18 +29,32 @@ export function normalizeImageUrl(rawUrl?: string): string {
     }
   }
 
+  // GitHub blob link -> raw content link
+  if (url.includes('github.com') && url.includes('/blob/')) {
+    url = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+  }
+
   // Imgur page link -> direct image link
   if (url.includes('imgur.com') && !url.includes('i.imgur.com')) {
     const imgurId = url.split('/').pop()?.split('.')[0];
-    if (imgurId) {
+    if (imgurId && imgurId.length >= 3) {
       return `https://i.imgur.com/${imgurId}.png`;
+    }
+  }
+
+  // PostImage share link -> direct image link
+  if (url.includes('postimg.cc') && !url.includes('i.postimg.cc')) {
+    const postId = url.split('/').pop();
+    if (postId) {
+      return `https://i.postimg.cc/${postId}/image.png`;
     }
   }
 
   // Dropbox share link -> raw image
   if (url.includes('dropbox.com')) {
-    url = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
+    url = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('&dl=0', '');
   }
 
   return url;
 }
+

@@ -24,12 +24,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         
         {/* Display ONLY the game image when imageUrl is present and hasn't permanently failed */}
         {game.imageUrl && !hasError ? (
-          <div className="relative w-full h-full">
-            {/* Gray loading shadow / skeleton placeholder when network is slow */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Blinking glowing shadow skeleton while URL is loading */}
             {!imgLoaded && (
-              <div className="absolute inset-0 bg-slate-800/90 animate-pulse rounded-2xl flex flex-col items-center justify-center gap-2 p-2 z-10">
-                <div className="w-7 h-7 rounded-full border-2 border-slate-600 border-t-amber-400 animate-spin" />
-                <div className="w-12 h-2 bg-slate-700/80 rounded-full animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-indigo-950/90 to-purple-900/60 animate-pulse rounded-2xl border border-purple-500/40 shadow-[0_0_25px_rgba(168,85,247,0.6)] flex flex-col items-center justify-center gap-2 z-10">
+                <div className="w-8 h-8 rounded-full border-2 border-purple-400/40 border-t-amber-400 animate-spin shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
+                <div className="w-16 h-2 bg-purple-500/40 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
               </div>
             )}
             <img
@@ -40,15 +40,14 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
               onLoad={() => setImgLoaded(true)}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                if (target.src !== window.location.origin + DEFAULT_DIAMOND_IMAGE) {
+                if (target.src !== window.location.origin + DEFAULT_DIAMOND_IMAGE && !target.src.endsWith(DEFAULT_DIAMOND_IMAGE)) {
                   target.src = DEFAULT_DIAMOND_IMAGE;
                 } else {
                   setHasError(true);
                 }
               }}
-              className={`w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-108 ${
-                imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-              }`}
+              style={{ display: imgLoaded ? 'block' : 'none' }}
+              className="w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-108 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
             />
           </div>
         ) : null}
