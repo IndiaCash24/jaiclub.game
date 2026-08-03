@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GameItem } from '../types';
-import { Play } from 'lucide-react';
-import { normalizeImageUrl, DEFAULT_DIAMOND_IMAGE } from '../utils/imageUtils';
+import { Play, Sparkles, Flame, Shield, Trophy, Zap, Compass, Star } from 'lucide-react';
+import { normalizeImageUrl } from '../utils/imageUtils';
 
 interface GameCardProps {
   game: GameItem;
@@ -14,204 +14,234 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
 
   const cleanImageUrl = normalizeImageUrl(game.imageUrl);
 
+  // Helper to render high-contrast 3D vector graphics for each theme
+  const renderCardGraphic = () => {
+    switch (game.theme) {
+      case 'aviator-dark':
+      case 'aviator-red':
+      case 'sky-aviator':
+        return (
+          <div className="relative z-10 my-auto flex flex-col items-center justify-center animate-float">
+            <svg viewBox="0 0 100 60" className="w-28 h-16 filter drop-shadow-[0_0_15px_rgba(239,68,68,0.9)]">
+              <path
+                d="M10 35 L40 28 L70 12 L95 20 L80 32 L45 36 L25 45 Z"
+                fill="#DC2626"
+                stroke="#FCA5A5"
+                strokeWidth="1.5"
+              />
+              <path d="M40 28 L60 5 L75 10 L52 28 Z" fill="#EF4444" />
+              <path d="M45 36 L55 52 L68 48 L52 35 Z" fill="#991B1B" />
+              <circle cx="85" cy="22" r="3" fill="#FFE4E6" />
+              {/* Flight speed trail */}
+              <line x1="5" y1="38" x2="25" y2="46" stroke="#EF4444" strokeWidth="2" strokeDasharray="2,2" />
+            </svg>
+          </div>
+        );
+
+      case 'wingo':
+        return (
+          <div className="relative z-10 my-auto flex items-center justify-center">
+            <svg viewBox="0 0 120 100" className="w-28 h-20 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]">
+              <defs>
+                <radialGradient id="wingoBallRed" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stopColor="#FF8A8A"/>
+                  <stop offset="50%" stopColor="#DC2626"/>
+                  <stop offset="100%" stopColor="#7F1D1D"/>
+                </radialGradient>
+                <radialGradient id="wingoBallDark" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stopColor="#6B7280"/>
+                  <stop offset="50%" stopColor="#111827"/>
+                  <stop offset="100%" stopColor="#000000"/>
+                </radialGradient>
+                <radialGradient id="wingoBallGreen" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stopColor="#86EFAC"/>
+                  <stop offset="50%" stopColor="#16A34A"/>
+                  <stop offset="100%" stopColor="#14532D"/>
+                </radialGradient>
+              </defs>
+              {/* Ball 1 */}
+              <circle cx="35" cy="40" r="20" fill="url(#wingoBallRed)" />
+              <circle cx="35" cy="40" r="9" fill="#FFF" />
+              <text x="32" y="44" fontSize="11" fontWeight="bold" fill="#000">7</text>
+
+              {/* Ball 2 */}
+              <circle cx="82" cy="42" r="18" fill="url(#wingoBallDark)" stroke="#374151" strokeWidth="1" />
+              <circle cx="82" cy="42" r="8" fill="#FFF" />
+              <text x="79" y="46" fontSize="10" fontWeight="bold" fill="#000">8</text>
+
+              {/* Ball 3 Green */}
+              <circle cx="58" cy="30" r="15" fill="url(#wingoBallGreen)" />
+              <circle cx="58" cy="30" r="7" fill="#FFF" />
+              <text x="56" y="33" fontSize="9" fontWeight="bold" fill="#000">3</text>
+
+              {/* Gold Rupee Coin */}
+              <circle cx="58" cy="68" r="16" fill="#FFC107" stroke="#FFF" strokeWidth="1.5" />
+              <text x="52" y="74" fontSize="16" fontWeight="extrabold" fill="#78350F">₹</text>
+            </svg>
+          </div>
+        );
+
+      case 'cricket':
+        return (
+          <div className="relative z-10 my-auto flex items-center justify-center">
+            <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]">
+              <path d="M50 5 L85 20 L85 55 C85 75 50 88 50 88 C50 88 15 75 15 55 L15 20 Z" fill="#065F46" stroke="#A7F3D0" strokeWidth="2" />
+              <path d="M35 30 C35 22 65 22 65 30 L65 48 C65 52 58 55 50 55 C42 55 35 52 35 48 Z" fill="#047857" stroke="#FFF" strokeWidth="1.5" />
+              <path d="M32 40 L68 40 M32 44 L68 44" stroke="#A7F3D0" strokeWidth="1.5" />
+              <circle cx="50" cy="68" r="6" fill="#EF4444" stroke="#FFF" strokeWidth="1" />
+            </svg>
+          </div>
+        );
+
+      case 'pubg':
+        return (
+          <div className="relative z-10 my-auto">
+            <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_12px_rgba(245,158,11,0.6)]">
+              <defs>
+                <linearGradient id="helmetMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#F59E0B"/>
+                  <stop offset="50%" stopColor="#D97706"/>
+                  <stop offset="100%" stopColor="#78350F"/>
+                </linearGradient>
+              </defs>
+              <path d="M20 45 C20 18 80 18 80 45 L80 60 L20 60 Z" fill="url(#helmetMetal)" stroke="#FBBF24" strokeWidth="1.5"/>
+              <rect x="30" y="42" width="40" height="12" rx="2" fill="#111827" stroke="#F59E0B" strokeWidth="1"/>
+              <line x1="40" y1="42" x2="40" y2="54" stroke="#D97706" strokeWidth="1"/>
+              <line x1="50" y1="42" x2="50" y2="54" stroke="#D97706" strokeWidth="1"/>
+              <line x1="60" y1="42" x2="60" y2="54" stroke="#D97706" strokeWidth="1"/>
+            </svg>
+          </div>
+        );
+
+      case 'mines':
+        return (
+          <div className="relative z-10 my-auto flex items-center justify-center">
+            <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_15px_rgba(99,102,241,0.8)]">
+              <polygon points="50,10 80,30 80,65 50,85 20,65 20,30" fill="#1E1B4B" stroke="#6366F1" strokeWidth="2" />
+              <polygon points="50,20 70,35 50,70 30,35" fill="#818CF8" />
+              <circle cx="50" cy="45" r="10" fill="#E0E7FF" />
+            </svg>
+          </div>
+        );
+
+      case 'gold-slot':
+        return (
+          <div className="relative z-10 my-auto flex items-center justify-center">
+            <svg viewBox="0 0 100 90" className="w-26 h-20 filter drop-shadow-[0_6px_15px_rgba(245,158,11,0.8)]">
+              <rect x="15" y="20" width="70" height="50" rx="8" fill="#78350F" stroke="#FBBF24" strokeWidth="2" />
+              <rect x="22" y="28" width="56" height="34" rx="4" fill="#000" />
+              <text x="27" y="52" fontSize="20" fontWeight="black" fill="#F59E0B">7</text>
+              <text x="44" y="52" fontSize="20" fontWeight="black" fill="#EF4444">7</text>
+              <text x="61" y="52" fontSize="20" fontWeight="black" fill="#10B981">7</text>
+            </svg>
+          </div>
+        );
+
+      case 'casino-blue':
+      default:
+        return (
+          <div className="relative z-10 my-auto flex items-center justify-center">
+            <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_15px_rgba(59,130,246,0.8)]">
+              <rect x="25" y="20" width="35" height="50" rx="4" fill="#FFF" stroke="#2563EB" strokeWidth="1.5" transform="rotate(-10 40 45)" />
+              <text x="32" y="42" fontSize="16" fontWeight="bold" fill="#DC2626" transform="rotate(-10 40 45)">A</text>
+              <rect x="45" y="20" width="35" height="50" rx="4" fill="#FFF" stroke="#2563EB" strokeWidth="1.5" transform="rotate(10 60 45)" />
+              <text x="52" y="42" fontSize="16" fontWeight="bold" fill="#000" transform="rotate(10 60 45)">K</text>
+            </svg>
+          </div>
+        );
+    }
+  };
+
+  // Helper for background gradient based on theme
+  const getGradientBg = () => {
+    switch (game.theme) {
+      case 'aviator-dark':
+        return 'bg-gradient-to-br from-red-950 via-stone-900 to-black border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.3)]';
+      case 'aviator-red':
+        return 'bg-gradient-to-br from-rose-800 via-red-900 to-rose-950 border-rose-400/50 shadow-[0_0_15px_rgba(244,63,94,0.3)]';
+      case 'sky-aviator':
+        return 'bg-gradient-to-br from-sky-600 via-sky-800 to-indigo-950 border-sky-400/50 shadow-[0_0_15px_rgba(56,189,248,0.3)]';
+      case 'wingo':
+        return 'bg-gradient-to-br from-amber-600 via-orange-700 to-amber-950 border-amber-400/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]';
+      case 'cricket':
+        return 'bg-gradient-to-br from-emerald-600 via-emerald-800 to-green-950 border-emerald-400/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]';
+      case 'pubg':
+        return 'bg-gradient-to-br from-amber-900 via-yellow-950 to-zinc-950 border-amber-500/50 shadow-[0_0_15px_rgba(217,119,6,0.3)]';
+      case 'mines':
+        return 'bg-gradient-to-br from-indigo-700 via-purple-900 to-slate-950 border-indigo-400/50 shadow-[0_0_15px_rgba(99,102,241,0.3)]';
+      case 'gold-slot':
+        return 'bg-gradient-to-br from-amber-700 via-yellow-900 to-red-950 border-amber-400/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]';
+      case 'casino-blue':
+      default:
+        return 'bg-gradient-to-br from-blue-700 via-indigo-900 to-slate-950 border-blue-400/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]';
+    }
+  };
+
   return (
     <div
       onClick={() => onPlayGame(game)}
-      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-purple-500/30 bg-[#150B33] shadow-lg hover:border-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] active:scale-95 transition-all duration-200 flex flex-col aspect-[4/5] w-full"
+      className={`group relative cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300 hover:scale-[1.03] active:scale-95 flex flex-col aspect-[4/5] w-full ${getGradientBg()}`}
     >
-      {/* 100% PURE GAME IMAGE CONTAINER - NO TEXT ANYWHERE */}
-      <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#100728]">
+      {/* CARD TOP BADGE / TAG */}
+      {game.badge && (
+        <div className="absolute top-2 left-2 z-20">
+          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider text-white shadow-md border border-white/20 flex items-center gap-1 ${game.badgeColor || 'bg-red-600'}`}>
+            <Flame className="w-2.5 h-2.5 fill-white" />
+            {game.badge}
+          </span>
+        </div>
+      )}
+
+      {/* TOP RIGHT HOT / PLAYERS COUNT */}
+      <div className="absolute top-2 right-2 z-20 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded-full border border-white/10 text-[9px] font-bold text-amber-300 flex items-center gap-1">
+        <Zap className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+        {game.playersCount ? `${(game.playersCount / 1000).toFixed(1)}k` : 'HOT'}
+      </div>
+
+      {/* CARD CONTENT / GRAPHIC AREA */}
+      <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
         
-        {/* Display ONLY the game image when imageUrl is present and hasn't permanently failed */}
-        {game.imageUrl && !hasError ? (
+        {/* Render Image if available and valid */}
+        {cleanImageUrl && !hasError ? (
           <div className="relative w-full h-full flex items-center justify-center">
-            {/* Blinking glowing shadow skeleton while URL is loading */}
             {!imgLoaded && (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-indigo-950/90 to-purple-900/60 animate-pulse rounded-2xl border border-purple-500/40 shadow-[0_0_25px_rgba(168,85,247,0.6)] flex flex-col items-center justify-center gap-2 z-10">
                 <div className="w-8 h-8 rounded-full border-2 border-purple-400/40 border-t-amber-400 animate-spin shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
-                <div className="w-16 h-2 bg-purple-500/40 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
               </div>
             )}
             <img
               src={cleanImageUrl}
-              alt=""
+              alt={game.title}
               decoding="async"
               loading="eager"
               onLoad={() => setImgLoaded(true)}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                if (target.src !== window.location.origin + DEFAULT_DIAMOND_IMAGE && !target.src.endsWith(DEFAULT_DIAMOND_IMAGE)) {
-                  target.src = DEFAULT_DIAMOND_IMAGE;
-                } else {
-                  setHasError(true);
-                }
-              }}
+              onError={() => setHasError(true)}
               style={{ display: imgLoaded ? 'block' : 'none' }}
-              className="w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-108 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+              className="w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-105"
             />
           </div>
-        ) : null}
-
-        {/* THEME 1: AVIATOR DARK (Pure Jet graphic - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'aviator-dark' && (
-          <div className="w-full h-full bg-radial from-stone-900 via-zinc-950 to-black p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/40 via-transparent to-black opacity-80" />
-            
-            {/* Glowing 3D Red Jet Graphic */}
-            <div className="relative z-10 my-auto animate-float">
-              <svg viewBox="0 0 100 60" className="w-28 h-16 filter drop-shadow-[0_0_12px_rgba(220,38,38,0.9)]">
-                <path
-                  d="M10 35 L40 28 L70 12 L95 20 L80 32 L45 36 L25 45 Z"
-                  fill="#DC2626"
-                  stroke="#FCA5A5"
-                  strokeWidth="1.5"
-                />
-                <path d="M40 28 L60 5 L75 10 L52 28 Z" fill="#B91C1C" />
-                <path d="M45 36 L55 52 L68 48 L52 35 Z" fill="#991B1B" />
-                <circle cx="85" cy="22" r="3" fill="#FFE4E6" />
-              </svg>
-            </div>
-          </div>
+        ) : (
+          /* FALLBACK TO CUSTOM HIGH-IMPACT SVG GRAPHIC */
+          renderCardGraphic()
         )}
 
-        {/* THEME 2: AVIATOR RED (Deep crimson background with white vector plane - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'aviator-red' && (
-          <div className="w-full h-full bg-gradient-to-b from-rose-800 via-rose-900 to-red-950 p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/20 rounded-full blur-xl" />
-
-            {/* White minimalist vector plane graphic */}
-            <div className="relative z-10 my-auto animate-float">
-              <svg viewBox="0 0 100 60" className="w-28 h-16 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-                <path
-                  d="M8 32 L35 25 L68 10 L92 18 L78 30 L42 34 L22 42 Z"
-                  fill="none"
-                  stroke="#FFFFFF"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path d="M38 25 L58 4 L70 8 L48 25 Z" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
-                <line x1="8" y1="32" x2="2" y2="34" stroke="#FFF" strokeWidth="2" />
-              </svg>
-            </div>
+        {/* BOTTOM GAME TITLE & MULTIPLIER OVERLAY PANEL */}
+        <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black via-black/80 to-transparent p-2.5 pt-6 flex flex-col gap-0.5">
+          <div className="text-xs sm:text-sm font-black text-white tracking-wide uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] truncate group-hover:text-amber-300 transition-colors">
+            {game.title}
           </div>
-        )}
-
-        {/* THEME 3: WINGO (Vibrant orange gradient card with 3D pool balls & gold coin - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'wingo' && (
-          <div className="w-full h-full bg-gradient-to-br from-orange-500 via-amber-600 to-orange-800 p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-300/30 via-transparent to-black/40" />
-
-            {/* Glossy 3D Billiards Pool Balls & Gold Rupee Coin */}
-            <div className="relative z-10 my-auto flex items-center justify-center">
-              <svg viewBox="0 0 120 100" className="w-28 h-22 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]">
-                <defs>
-                  <radialGradient id="ball7" cx="30%" cy="30%" r="70%">
-                    <stop offset="0%" stopColor="#FF8A8A"/>
-                    <stop offset="50%" stopColor="#DC2626"/>
-                    <stop offset="100%" stopColor="#7F1D1D"/>
-                  </radialGradient>
-                  <radialGradient id="ball8" cx="30%" cy="30%" r="70%">
-                    <stop offset="0%" stopColor="#6B7280"/>
-                    <stop offset="50%" stopColor="#111827"/>
-                    <stop offset="100%" stopColor="#000000"/>
-                  </radialGradient>
-                </defs>
-
-                {/* Pool Ball 7 */}
-                <circle cx="42" cy="38" r="22" fill="url(#ball7)" />
-                <circle cx="42" cy="38" r="10" fill="#FFF" />
-                <text x="39" y="42" fontSize="12" fontWeight="bold" fill="#000">7</text>
-
-                {/* Pool Ball 8 */}
-                <circle cx="78" cy="48" r="20" fill="url(#ball8)" stroke="#374151" strokeWidth="1" />
-                <circle cx="78" cy="48" r="9" fill="#FFF" />
-                <text x="75" y="52" fontSize="11" fontWeight="bold" fill="#000">8</text>
-
-                {/* Gold Rupee Coin */}
-                <circle cx="55" cy="68" r="16" fill="#FFC107" stroke="#FFF" strokeWidth="1" />
-                <text x="49" y="74" fontSize="16" fontWeight="extrabold" fill="#78350F">₹</text>
-              </svg>
-            </div>
+          <div className="flex items-center justify-between text-[10px] text-purple-200/90 font-semibold">
+            <span className="truncate max-w-[70%]">{game.subtitle || 'Play & Win'}</span>
+            <span className="text-amber-400 font-extrabold shrink-0 bg-amber-400/10 px-1.5 py-0.2 rounded border border-amber-400/20">
+              {game.multiplier || '10x'}
+            </span>
           </div>
-        )}
+        </div>
 
-        {/* THEME 4: CRICKET (Neon green eSports theme with cricket helmet emblem - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'cricket' && (
-          <div className="w-full h-full bg-gradient-to-b from-emerald-400 via-emerald-600 to-green-900 p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-24 h-24 bg-emerald-300/30 rounded-full blur-lg" />
-
-            <div className="relative z-10 my-auto flex items-center justify-center">
-              <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]">
-                <path d="M50 5 L85 20 L85 55 C85 75 50 88 50 88 C50 88 15 75 15 55 L15 20 Z" fill="#065F46" stroke="#A7F3D0" strokeWidth="2" />
-                <path d="M35 30 C35 22 65 22 65 30 L65 48 C65 52 58 55 50 55 C42 55 35 52 35 48 Z" fill="#047857" stroke="#FFF" strokeWidth="1.5" />
-                <path d="M32 40 L68 40 M32 44 L68 44" stroke="#A7F3D0" strokeWidth="1.5" />
-                <circle cx="50" cy="68" r="5" fill="#EF4444" />
-              </svg>
-            </div>
-          </div>
-        )}
-
-        {/* THEME 5: PUBG (Dark tactical theme with 3D gold helmet graphic - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'pubg' && (
-          <div className="w-full h-full bg-gradient-to-b from-amber-950 via-zinc-900 to-black p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-600/20 via-transparent to-black" />
-
-            <div className="relative z-10 my-auto">
-              <svg viewBox="0 0 100 90" className="w-24 h-20 filter drop-shadow-[0_6px_12px_rgba(245,158,11,0.5)]">
-                <defs>
-                  <linearGradient id="helmetMetal" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#F59E0B"/>
-                    <stop offset="50%" stopColor="#D97706"/>
-                    <stop offset="100%" stopColor="#78350F"/>
-                  </linearGradient>
-                </defs>
-                <path d="M20 45 C20 18 80 18 80 45 L80 60 L20 60 Z" fill="url(#helmetMetal)" stroke="#FBBF24" strokeWidth="1.5"/>
-                <rect x="30" y="42" width="40" height="12" rx="2" fill="#111827" stroke="#F59E0B" strokeWidth="1"/>
-                <line x1="40" y1="42" x2="40" y2="54" stroke="#D97706" strokeWidth="1"/>
-                <line x1="50" y1="42" x2="50" y2="54" stroke="#D97706" strokeWidth="1"/>
-                <line x1="60" y1="42" x2="60" y2="54" stroke="#D97706" strokeWidth="1"/>
-              </svg>
-            </div>
-          </div>
-        )}
-
-        {/* THEME 6: SKY AVIATOR (Sky blue gradient card with cartoon plane - NO TEXT) */}
-        {(!game.imageUrl || hasError) && game.theme === 'sky-aviator' && (
-          <div className="w-full h-full bg-gradient-to-b from-sky-400 via-sky-600 to-indigo-900 p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="absolute top-2 left-2 w-10 h-4 bg-white/30 rounded-full blur-xs" />
-            <div className="absolute top-6 right-3 w-14 h-5 bg-white/20 rounded-full blur-xs" />
-
-            <div className="relative z-10 my-auto animate-float">
-              <svg viewBox="0 0 100 65" className="w-24 h-16 filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.4)]">
-                <defs>
-                  <linearGradient id="planeYellow" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#FDE047"/>
-                    <stop offset="100%" stopColor="#EAB308"/>
-                  </linearGradient>
-                </defs>
-                <path d="M15 30 Q50 15 85 30 Q70 45 15 35 Z" fill="url(#planeYellow)" stroke="#FFF" strokeWidth="1"/>
-                <polygon points="40,25 65,5 75,5 50,25" fill="#38BDF8" stroke="#FFF" strokeWidth="1"/>
-                <polygon points="35,33 55,55 65,55 45,33" fill="#0284C7" stroke="#FFF" strokeWidth="1"/>
-                <ellipse cx="88" cy="30" rx="3" ry="12" fill="#E2E8F0" />
-              </svg>
-            </div>
-          </div>
-        )}
-
-        {/* FALLBACK THEMES FOR OTHER CATEGORIES (NO TEXT) */}
-        {(!game.imageUrl || hasError) && ['gold-slot', 'casino-blue', 'mines'].includes(game.theme) && (
-          <div className="w-full h-full bg-gradient-to-b from-purple-800 via-indigo-900 to-slate-950 p-3 flex flex-col items-center justify-center relative overflow-hidden">
-            <div className="text-4xl my-auto animate-bounce">
-              {game.iconType === 'slot' ? '🎰' : game.iconType === 'cards' ? '♠️' : '💣'}
-            </div>
-          </div>
-        )}
-
-        {/* Play Hover Overlay Button */}
-        <div className="absolute inset-0 z-30 bg-purple-950/70 backdrop-blur-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(236,72,153,0.8)] scale-90 group-hover:scale-100 transition-transform">
-            <Play className="w-6 h-6 fill-white stroke-none ml-1" />
+        {/* Play Hover Action Overlay */}
+        <div className="absolute inset-0 z-30 bg-purple-950/60 backdrop-blur-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <button className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-400 to-pink-500 flex items-center justify-center text-slate-950 font-bold shadow-[0_0_20px_rgba(245,158,11,0.9)] scale-90 group-hover:scale-100 transition-transform">
+            <Play className="w-6 h-6 fill-slate-950 stroke-none ml-1" />
           </button>
         </div>
 
@@ -219,4 +249,5 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
     </div>
   );
 };
+
 

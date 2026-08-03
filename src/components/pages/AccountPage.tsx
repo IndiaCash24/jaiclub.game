@@ -266,7 +266,24 @@ export const AccountPage: React.FC<AccountPageProps> = ({
 
         </div>
 
-{/* Admin button hidden as requested */}
+        {/* 4. ADMIN PANEL ACCESS BUTTON */}
+        <button
+          onClick={onOpenAdmin}
+          className="w-full bg-gradient-to-r from-amber-500 via-purple-600 to-indigo-600 border border-amber-400/50 rounded-2xl p-4 flex items-center justify-between shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:brightness-110 active:scale-98 transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-300/40 flex items-center justify-center text-amber-300 shadow-inner group-hover:scale-110 transition-transform">
+              <Shield className="w-6 h-6 text-amber-300 fill-amber-300/20" />
+            </div>
+            <div className="text-left">
+              <div className="text-sm font-black text-white tracking-wide flex items-center gap-2">
+                ADMIN PANEL <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full uppercase">Control</span>
+              </div>
+              <div className="text-[11px] text-amber-200/80 font-medium">Manage Game Images, Banners, Popup & Rates</div>
+            </div>
+          </div>
+          <ChevronRight className="w-5 h-5 text-amber-300 group-hover:translate-x-1 transition-transform" />
+        </button>
 
         {/* 5. LIST MENU OPTIONS SECTION */}
         <div className="bg-[#181031] border border-purple-500/25 rounded-3xl overflow-hidden divide-y divide-purple-500/20">

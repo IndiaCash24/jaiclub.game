@@ -37,7 +37,7 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
       <div className="relative w-full overflow-hidden rounded-2xl bg-[#12072B] border border-purple-500/30 shadow-[0_8px_25px_rgba(0,0,0,0.6)] group">
         
         {/* Banner Display Container */}
-        <div className="relative w-full h-36 sm:h-44 overflow-hidden flex items-center justify-center bg-slate-900">
+        <div className="relative w-full h-36 sm:h-44 overflow-hidden flex items-center justify-center bg-[#0d0522]">
           
           {/* Blinking Glowing Shadow Skeleton for Banner */}
           {!bannerLoaded && !hasError && (
@@ -48,35 +48,46 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
           )}
 
           {hasError ? (
-            <div className="w-full h-full bg-gradient-to-r from-amber-900 via-purple-950 to-indigo-950 p-4 flex items-center justify-between border border-amber-500/30 shadow-[0_0_25px_rgba(245,158,11,0.4)]">
-              <div className="flex flex-col gap-1">
-                <div className="text-amber-400 font-extrabold text-lg flex items-center gap-1.5">
-                  <Sparkles className="w-5 h-5 text-amber-300 animate-spin" /> JAI CLUB SPECIAL BONUS
+            <div className="w-full h-full bg-gradient-to-r from-amber-900 via-purple-950 to-indigo-950 p-4 sm:p-6 flex items-center justify-between border border-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.4)] relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl" />
+              <div className="flex flex-col gap-1.5 z-10 max-w-[70%]">
+                <span className="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider w-max shadow-md">
+                  SPECIAL VIP OFFER
+                </span>
+                <div className="text-amber-300 font-extrabold text-lg sm:text-xl flex items-center gap-2 drop-shadow-[0_2px_8px_rgba(245,158,11,0.6)]">
+                  <Sparkles className="w-5 h-5 text-amber-300 animate-spin" /> JAI CLUB WELCOME BONUS
                 </div>
-                <div className="text-xs text-purple-200">100% Welcome Cashback & Daily Rewards</div>
+                <div className="text-xs sm:text-sm text-purple-100 font-medium">100% Instant Deposit Bonus & Daily Aviator Rewards</div>
               </div>
-              <div className="text-3xl animate-bounce">🎁</div>
+
+              {/* 3D Vector Graphic Icon */}
+              <div className="relative z-10 flex items-center justify-center">
+                <svg viewBox="0 0 100 100" className="w-20 h-20 filter drop-shadow-[0_0_15px_rgba(245,158,11,0.8)] animate-bounce">
+                  <circle cx="50" cy="50" r="40" fill="#FFC107" stroke="#FFF" strokeWidth="2" />
+                  <circle cx="50" cy="50" r="32" fill="#D97706" />
+                  <text x="38" y="62" fontSize="36" fontWeight="black" fill="#FFF">👑</text>
+                </svg>
+              </div>
             </div>
           ) : (
-            <img
-              key={safeSlideIndex}
-              src={currentBannerUrl}
-              alt=""
-              decoding="async"
-              loading="eager"
-              onLoad={() => setBannerLoaded(true)}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                if (target.src !== window.location.origin + DEFAULT_FALLBACK_IMAGE && !target.src.endsWith(DEFAULT_FALLBACK_IMAGE)) {
-                  target.src = DEFAULT_FALLBACK_IMAGE;
-                } else {
+            <div className="relative w-full h-full">
+              <img
+                key={safeSlideIndex}
+                src={currentBannerUrl}
+                alt=""
+                decoding="async"
+                loading="eager"
+                onLoad={() => setBannerLoaded(true)}
+                onError={() => {
                   setHasError(true);
                   setBannerLoaded(true);
-                }
-              }}
-              style={{ display: bannerLoaded ? 'block' : 'none' }}
-              className="w-full h-full object-cover transition-all duration-500 ease-in-out shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-            />
+                }}
+                style={{ display: bannerLoaded ? 'block' : 'none' }}
+                className="w-full h-full object-cover transition-all duration-500 ease-in-out shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+              />
+              {/* Subtle Gradient Overlay for Banner Text Readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+            </div>
           )}
         </div>
 
