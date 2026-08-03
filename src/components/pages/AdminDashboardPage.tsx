@@ -65,10 +65,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
   // Sample preset banner image URLs for quick 1-click test addition
   const presetBannerSamples = [
-    { label: 'Gold Vault & Coins Banner', url: '/images/vault_gold_bonus_1785787230279.jpg' },
-    { label: 'Aviator Red Jet Banner', url: '/images/aviator_red_jet_1785787036135.jpg' },
-    { label: 'WinGo 3D Balls Banner', url: '/images/wingo_3d_balls_1785787086705.jpg' },
-    { label: 'Purple Diamond VIP Banner', url: '/images/purple_3d_diamond_1785787118017.jpg' },
+    { label: 'Gold Vault & Coins Banner', url: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80' },
+    { label: 'Aviator Red Jet Banner', url: 'https://images.unsplash.com/photo-1519074069444-1ba4eae287b9?w=1000&auto=format&fit=crop&q=80' },
+    { label: 'WinGo 3D Balls Banner', url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=1000&auto=format&fit=crop&q=80' },
+    { label: 'Purple Diamond VIP Banner', url: 'https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=1000&auto=format&fit=crop&q=80' },
     { label: 'Unsplash Casino Lights Banner', url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&auto=format&fit=crop&q=80' },
     { label: 'Unsplash Stadium Lights Banner', url: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&auto=format&fit=crop&q=80' },
   ];

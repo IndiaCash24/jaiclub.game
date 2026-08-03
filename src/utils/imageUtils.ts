@@ -1,7 +1,7 @@
-export const DEFAULT_FALLBACK_IMAGE = '/images/vault_gold_bonus_1785787230279.jpg';
-export const DEFAULT_DIAMOND_IMAGE = '/images/purple_3d_diamond_1785787118017.jpg';
-export const DEFAULT_AVIATOR_IMAGE = '/images/aviator_red_jet_1785787036135.jpg';
-export const DEFAULT_WINGO_IMAGE = '/images/wingo_3d_balls_1785787086705.jpg';
+export const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80';
+export const DEFAULT_DIAMOND_IMAGE = 'https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=800&auto=format&fit=crop&q=80';
+export const DEFAULT_AVIATOR_IMAGE = 'https://images.unsplash.com/photo-1519074069444-1ba4eae287b9?w=800&auto=format&fit=crop&q=80';
+export const DEFAULT_WINGO_IMAGE = 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&auto=format&fit=crop&q=80';
 
 export function normalizeImageUrl(rawUrl?: string): string {
   if (!rawUrl || typeof rawUrl !== 'string') {

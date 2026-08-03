@@ -57,9 +57,9 @@ export default function App() {
       console.warn("Failed to read local banners state:", e);
     }
     return [
-      '/images/vault_gold_bonus_1785787230279.jpg',
-      '/images/aviator_red_jet_1785787036135.jpg',
-      '/images/wingo_3d_balls_1785787086705.jpg',
+      'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1519074069444-1ba4eae287b9?w=1000&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=1000&auto=format&fit=crop&q=80',
     ];
   });
 
@@ -71,7 +71,7 @@ export default function App() {
     } catch (e) {
       console.warn("Failed to read local welcome popup state:", e);
     }
-    return '/images/vault_gold_bonus_1785787230279.jpg';
+    return 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80';
   });
 
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);
