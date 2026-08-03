@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { UserState, CategoryId, ActiveTab, GameItem } from './types';
 import { GAMES_CATALOG } from './data/gamesData';
-import { saveAppConfigToFirebase, subscribeToAppConfig } from './lib/firebase';
+import { 
+  saveAppConfigToFirebase, 
+  subscribeToAppConfig, 
+  subscribeToUserData, 
+  saveUserDataToFirebase, 
+  recordTransactionToFirebase 
+} from './lib/firebase';
 import { Header } from './components/Header';
 import { PromoBanner } from './components/PromoBanner';
 import { CategoryNav } from './components/CategoryNav';
@@ -28,85 +34,24 @@ import { NoticeModal } from './components/modals/NoticeModal';
 import { WelcomeModal } from './components/modals/WelcomeModal';
 
 export default function App() {
-  // Dynamic Games Catalog State (Supports Admin URL Editing & Firebase Persistence)
-  const [games, setGames] = useState<GameItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('jai_club_games_images');
-      if (saved) {
-        const parsed: Array<{ id: string; imageUrl?: string }> = JSON.parse(saved);
-        return GAMES_CATALOG.map((g) => {
-          const match = parsed.find((p) => p.id === g.id);
-          return match?.imageUrl ? { ...g, imageUrl: match.imageUrl } : g;
-        });
-      }
-    } catch (e) {
-      console.warn("Failed to read local games state:", e);
-    }
-    return GAMES_CATALOG;
-  });
+  // Dynamic Games Catalog State
+  const [games, setGames] = useState<GameItem[]>(GAMES_CATALOG);
 
-  // Top Banner Slider Images State (Supports Admin Adding/Editing/Removing Banners & Firebase Persistence)
-  const [banners, setBanners] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('jai_club_banners');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.warn("Failed to read local banners state:", e);
-    }
-    return [
-      'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1519074069444-1ba4eae287b9?w=1000&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=1000&auto=format&fit=crop&q=80',
-    ];
-  });
+  // Top Banner Slider Images State
+  const [banners, setBanners] = useState<string[]>([
+    'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1519074069444-1ba4eae287b9?w=1000&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=1000&auto=format&fit=crop&q=80',
+  ]);
 
-  // Home Entry Welcome Image Popup State (Admin Editable URL & Firebase Persistence)
-  const [welcomePopupUrl, setWelcomePopupUrl] = useState<string>(() => {
-    try {
-      const saved = localStorage.getItem('jai_club_welcome_popup');
-      if (saved) return saved;
-    } catch (e) {
-      console.warn("Failed to read local welcome popup state:", e);
-    }
-    return 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80';
-  });
+  // Home Entry Welcome Image Popup State
+  const [welcomePopupUrl, setWelcomePopupUrl] = useState<string>(
+    'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1000&auto=format&fit=crop&q=80'
+  );
 
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);
 
-  // Subscribe to Firebase Firestore for Realtime Updates across devices
-  useEffect(() => {
-    const unsubscribe = subscribeToAppConfig((config) => {
-      if (config.welcomePopupUrl) {
-        setWelcomePopupUrl(config.welcomePopupUrl);
-        localStorage.setItem('jai_club_welcome_popup', config.welcomePopupUrl);
-      }
-      if (config.banners && Array.isArray(config.banners) && config.banners.length > 0) {
-        setBanners(config.banners);
-        localStorage.setItem('jai_club_banners', JSON.stringify(config.banners));
-      }
-      if (config.games && Array.isArray(config.games)) {
-        setGames((prevGames) =>
-          prevGames.map((g) => {
-            const found = config.games?.find((p) => p.id === g.id);
-            return found?.imageUrl ? { ...g, imageUrl: found.imageUrl } : g;
-          })
-        );
-        localStorage.setItem('jai_club_games_images', JSON.stringify(config.games));
-      }
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
-  // Admin View State
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
-
-  // User state
+  // User state (Synced with Cloud Firestore)
   const [user, setUser] = useState<UserState>({
     balance: 500.00,
     username: 'JAICLUB_PLAYER',
@@ -115,6 +60,53 @@ export default function App() {
     unreadNotifications: 2,
     language: 'EN',
   });
+
+  // Subscribe to Firebase Firestore for Realtime Updates (App Config & User Data)
+  useEffect(() => {
+    // 1. Subscribe to App Settings (Banners, Popup, Games)
+    const unsubscribeConfig = subscribeToAppConfig((config) => {
+      if (config.welcomePopupUrl) {
+        setWelcomePopupUrl(config.welcomePopupUrl);
+      }
+      if (config.banners && Array.isArray(config.banners) && config.banners.length > 0) {
+        setBanners(config.banners);
+      }
+      if (config.games && Array.isArray(config.games)) {
+        setGames((prevGames) =>
+          prevGames.map((g) => {
+            const found = config.games?.find((p) => p.id === g.id);
+            return found?.imageUrl ? { ...g, imageUrl: found.imageUrl } : g;
+          })
+        );
+      }
+    });
+
+    // 2. Subscribe to User Balance & Profile in Cloud Firestore
+    const unsubscribeUser = subscribeToUserData((userData) => {
+      if (userData && typeof userData.balance === 'number') {
+        setUser((prev) => ({
+          ...prev,
+          ...userData,
+        }));
+      }
+    });
+
+    // Initialize initial user document if it doesn't exist yet
+    saveUserDataToFirebase({
+      username: user.username,
+      id: user.id,
+      vipLevel: user.vipLevel,
+      language: user.language,
+    });
+
+    return () => {
+      if (unsubscribeConfig) unsubscribeConfig();
+      if (unsubscribeUser) unsubscribeUser();
+    };
+  }, []);
+
+  // Admin View State
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   // Navigation & Category states
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
@@ -186,19 +178,24 @@ export default function App() {
     }));
   };
 
-  // Balance Updates
+  // Balance Updates (Persisted to Cloud Firestore)
   const handleUpdateBalance = (newBalance: number) => {
+    const finalBal = Math.max(0, newBalance);
     setUser((prev) => ({
       ...prev,
-      balance: Math.max(0, newBalance),
+      balance: finalBal,
     }));
+    saveUserDataToFirebase({ balance: finalBal });
   };
 
   const handleDepositSuccess = (addedAmount: number) => {
+    const newBal = user.balance + addedAmount;
     setUser((prev) => ({
       ...prev,
-      balance: prev.balance + addedAmount,
+      balance: newBal,
     }));
+    saveUserDataToFirebase({ balance: newBal });
+    recordTransactionToFirebase(addedAmount >= 0 ? 'deposit' : 'withdraw', Math.abs(addedAmount));
   };
 
   // Determine if a specific real game component exists
