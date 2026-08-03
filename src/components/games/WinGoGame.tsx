@@ -150,7 +150,7 @@ export const WinGoGame: React.FC<WinGoGameProps> = ({
 
           <div className="flex items-center gap-2">
             <img
-              src="/src/assets/images/wingo_3d_balls_1785787086705.jpg"
+              src="/images/wingo_3d_balls_1785787086705.jpg"
               alt="WinGo Lottery"
               referrerPolicy="no-referrer"
               className="w-7 h-7 object-contain"

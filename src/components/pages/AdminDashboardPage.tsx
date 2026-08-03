@@ -37,7 +37,7 @@ interface AdminDashboardPageProps {
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   games,
   banners,
-  welcomePopupUrl = '/src/assets/images/vault_gold_bonus_1785787230279.jpg',
+  welcomePopupUrl = '/images/vault_gold_bonus_1785787230279.jpg',
   onUpdateGameImage,
   onAddBanner,
   onUpdateBanner,
@@ -64,10 +64,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
   // Sample preset banner image URLs for quick 1-click test addition
   const presetBannerSamples = [
-    { label: 'Gold Vault & Coins Banner', url: '/src/assets/images/vault_gold_bonus_1785787230279.jpg' },
-    { label: 'Aviator Red Jet Banner', url: '/src/assets/images/aviator_red_jet_1785787036135.jpg' },
-    { label: 'WinGo 3D Balls Banner', url: '/src/assets/images/wingo_3d_balls_1785787086705.jpg' },
-    { label: 'Purple Diamond VIP Banner', url: '/src/assets/images/purple_3d_diamond_1785787118017.jpg' },
+    { label: 'Gold Vault & Coins Banner', url: '/images/vault_gold_bonus_1785787230279.jpg' },
+    { label: 'Aviator Red Jet Banner', url: '/images/aviator_red_jet_1785787036135.jpg' },
+    { label: 'WinGo 3D Balls Banner', url: '/images/wingo_3d_balls_1785787086705.jpg' },
+    { label: 'Purple Diamond VIP Banner', url: '/images/purple_3d_diamond_1785787118017.jpg' },
     { label: 'Unsplash Casino Lights Banner', url: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&auto=format&fit=crop&q=80' },
     { label: 'Unsplash Stadium Lights Banner', url: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&auto=format&fit=crop&q=80' },
   ];
@@ -303,7 +303,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               <div className="space-y-2">
                 <input
                   type="url"
-                  placeholder="Paste welcome image URL here (e.g. https://... or /src/assets/images/...)"
+                  placeholder="Paste welcome image URL here (e.g. https://... or /images/...)"
                   value={editingPopupInput}
                   onChange={(e) => setEditingPopupInput(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl bg-[#0C051F] border border-purple-500/40 text-xs text-white placeholder-purple-500 focus:outline-none focus:border-amber-400 font-mono"
@@ -360,7 +360,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     referrerPolicy="no-referrer"
                     className="max-h-full max-w-full object-contain rounded-xl"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
+                      (e.target as HTMLImageElement).src = '/images/vault_gold_bonus_1785787230279.jpg';
                     }}
                   />
                   <div className="absolute top-3 right-3 p-1.5 bg-red-600 rounded-full text-white text-xs font-bold shadow-md">
@@ -394,7 +394,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="url"
-                  placeholder="Paste banner image URL here (e.g. https://... or /src/assets/images/...)"
+                  placeholder="Paste banner image URL here (e.g. https://... or /images/...)"
                   value={newBannerInput}
                   onChange={(e) => setNewBannerInput(e.target.value)}
                   className="flex-1 px-3 py-2 rounded-xl bg-[#0C051F] border border-purple-500/40 text-xs text-white placeholder-purple-500 focus:outline-none focus:border-amber-400 font-mono"
@@ -463,7 +463,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
+                          (e.target as HTMLImageElement).src = '/images/vault_gold_bonus_1785787230279.jpg';
                         }}
                       />
                     </div>

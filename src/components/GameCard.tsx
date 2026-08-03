@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GameItem } from '../types';
 import { Play } from 'lucide-react';
+import { normalizeImageUrl, DEFAULT_DIAMOND_IMAGE } from '../utils/imageUtils';
 
 interface GameCardProps {
   game: GameItem;
@@ -9,6 +10,9 @@ interface GameCardProps {
 
 export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  const cleanImageUrl = normalizeImageUrl(game.imageUrl);
 
   return (
     <div
@@ -18,8 +22,8 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
       {/* 100% PURE GAME IMAGE CONTAINER - NO TEXT ANYWHERE */}
       <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#100728]">
         
-        {/* Display ONLY the game image when imageUrl is present */}
-        {game.imageUrl ? (
+        {/* Display ONLY the game image when imageUrl is present and hasn't permanently failed */}
+        {game.imageUrl && !hasError ? (
           <div className="relative w-full h-full">
             {/* Gray loading shadow / skeleton placeholder when network is slow */}
             {!imgLoaded && (
@@ -29,13 +33,18 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
               </div>
             )}
             <img
-              src={game.imageUrl}
+              src={cleanImageUrl}
               alt=""
-              referrerPolicy="no-referrer"
+              decoding="async"
+              loading="eager"
               onLoad={() => setImgLoaded(true)}
               onError={(e) => {
-                setImgLoaded(true);
-                (e.target as HTMLImageElement).src = '/src/assets/images/purple_3d_diamond_1785787118017.jpg';
+                const target = e.target as HTMLImageElement;
+                if (target.src !== window.location.origin + DEFAULT_DIAMOND_IMAGE) {
+                  target.src = DEFAULT_DIAMOND_IMAGE;
+                } else {
+                  setHasError(true);
+                }
               }}
               className={`w-full h-full object-cover rounded-2xl transition-all duration-300 group-hover:scale-108 ${
                 imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
@@ -45,7 +54,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         ) : null}
 
         {/* THEME 1: AVIATOR DARK (Pure Jet graphic - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'aviator-dark' && (
+        {(!game.imageUrl || hasError) && game.theme === 'aviator-dark' && (
           <div className="w-full h-full bg-radial from-stone-900 via-zinc-950 to-black p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/40 via-transparent to-black opacity-80" />
             
@@ -67,7 +76,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* THEME 2: AVIATOR RED (Deep crimson background with white vector plane - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'aviator-red' && (
+        {(!game.imageUrl || hasError) && game.theme === 'aviator-red' && (
           <div className="w-full h-full bg-gradient-to-b from-rose-800 via-rose-900 to-red-950 p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/20 rounded-full blur-xl" />
 
@@ -90,7 +99,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* THEME 3: WINGO (Vibrant orange gradient card with 3D pool balls & gold coin - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'wingo' && (
+        {(!game.imageUrl || hasError) && game.theme === 'wingo' && (
           <div className="w-full h-full bg-gradient-to-br from-orange-500 via-amber-600 to-orange-800 p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-300/30 via-transparent to-black/40" />
 
@@ -129,7 +138,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* THEME 4: CRICKET (Neon green eSports theme with cricket helmet emblem - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'cricket' && (
+        {(!game.imageUrl || hasError) && game.theme === 'cricket' && (
           <div className="w-full h-full bg-gradient-to-b from-emerald-400 via-emerald-600 to-green-900 p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-emerald-300/30 rounded-full blur-lg" />
 
@@ -145,7 +154,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* THEME 5: PUBG (Dark tactical theme with 3D gold helmet graphic - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'pubg' && (
+        {(!game.imageUrl || hasError) && game.theme === 'pubg' && (
           <div className="w-full h-full bg-gradient-to-b from-amber-950 via-zinc-900 to-black p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-600/20 via-transparent to-black" />
 
@@ -169,7 +178,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* THEME 6: SKY AVIATOR (Sky blue gradient card with cartoon plane - NO TEXT) */}
-        {!game.imageUrl && game.theme === 'sky-aviator' && (
+        {(!game.imageUrl || hasError) && game.theme === 'sky-aviator' && (
           <div className="w-full h-full bg-gradient-to-b from-sky-400 via-sky-600 to-indigo-900 p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute top-2 left-2 w-10 h-4 bg-white/30 rounded-full blur-xs" />
             <div className="absolute top-6 right-3 w-14 h-5 bg-white/20 rounded-full blur-xs" />
@@ -192,7 +201,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onPlayGame }) => {
         )}
 
         {/* FALLBACK THEMES FOR OTHER CATEGORIES (NO TEXT) */}
-        {!game.imageUrl && ['gold-slot', 'casino-blue', 'mines'].includes(game.theme) && (
+        {(!game.imageUrl || hasError) && ['gold-slot', 'casino-blue', 'mines'].includes(game.theme) && (
           <div className="w-full h-full bg-gradient-to-b from-purple-800 via-indigo-900 to-slate-950 p-3 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="text-4xl my-auto animate-bounce">
               {game.iconType === 'slot' ? '🎰' : game.iconType === 'cards' ? '♠️' : '💣'}

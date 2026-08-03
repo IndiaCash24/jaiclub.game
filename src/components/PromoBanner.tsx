@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, ShieldAlert, Sparkles, ChevronRight } from 'lucide-react';
+import { normalizeImageUrl, DEFAULT_FALLBACK_IMAGE } from '../utils/imageUtils';
 
 interface PromoBannerProps {
   banners: string[];
@@ -26,7 +27,7 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
 
   // Ensure activeSlide doesn't exceed bounds if banners array shrinks
   const safeSlideIndex = activeSlide >= banners.length ? 0 : activeSlide;
-  const currentBannerUrl = banners[safeSlideIndex] || banners[0] || '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
+  const currentBannerUrl = normalizeImageUrl(banners[safeSlideIndex] || banners[0] || DEFAULT_FALLBACK_IMAGE);
 
   return (
     <div className="px-3 pt-3 pb-1 flex flex-col gap-2">
@@ -48,11 +49,15 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
             key={safeSlideIndex}
             src={currentBannerUrl}
             alt=""
-            referrerPolicy="no-referrer"
+            decoding="async"
+            loading="eager"
             onLoad={() => setBannerLoaded(true)}
             onError={(e) => {
               setBannerLoaded(true);
-              (e.target as HTMLImageElement).src = '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
+              const target = e.target as HTMLImageElement;
+              if (target.src !== window.location.origin + DEFAULT_FALLBACK_IMAGE) {
+                target.src = DEFAULT_FALLBACK_IMAGE;
+              }
             }}
             className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
               bannerLoaded ? 'opacity-100' : 'opacity-0'

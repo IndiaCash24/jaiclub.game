@@ -57,9 +57,9 @@ export default function App() {
       console.warn("Failed to read local banners state:", e);
     }
     return [
-      '/src/assets/images/vault_gold_bonus_1785787230279.jpg',
-      '/src/assets/images/aviator_red_jet_1785787036135.jpg',
-      '/src/assets/images/wingo_3d_balls_1785787086705.jpg',
+      '/images/vault_gold_bonus_1785787230279.jpg',
+      '/images/aviator_red_jet_1785787036135.jpg',
+      '/images/wingo_3d_balls_1785787086705.jpg',
     ];
   });
 
@@ -71,7 +71,7 @@ export default function App() {
     } catch (e) {
       console.warn("Failed to read local welcome popup state:", e);
     }
-    return '/src/assets/images/vault_gold_bonus_1785787230279.jpg';
+    return '/images/vault_gold_bonus_1785787230279.jpg';
   });
 
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);

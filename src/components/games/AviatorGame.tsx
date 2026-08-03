@@ -183,7 +183,7 @@ export const AviatorGame: React.FC<AviatorGameProps> = ({
 
           <div className="flex items-center gap-2">
             <img
-              src="/src/assets/images/aviator_red_jet_1785787036135.jpg"
+              src="/images/aviator_red_jet_1785787036135.jpg"
               alt="Aviator Jet"
               referrerPolicy="no-referrer"
               className="w-7 h-7 object-contain drop-shadow-[0_0_8px_rgba(239,68,68,0.9)]"
@@ -265,7 +265,7 @@ export const AviatorGame: React.FC<AviatorGameProps> = ({
             {/* Live Jet Plane Flying */}
             <div className="relative my-2 animate-float">
               <img
-                src="/src/assets/images/aviator_red_jet_1785787036135.jpg"
+                src="/images/aviator_red_jet_1785787036135.jpg"
                 alt="Flying Red Jet"
                 referrerPolicy="no-referrer"
                 className="w-24 h-24 object-contain filter drop-shadow-[0_0_20px_rgba(239,68,68,1)] transform -rotate-12"
