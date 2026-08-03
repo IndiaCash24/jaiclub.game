@@ -1,0 +1,6 @@
+{
+  "name": "JAI CLUB - Online Casino & Gaming Portal",
+  "description": "High-end mobile-first online gaming & casino UI for JAI CLUB featuring 3D game cards, live ticker, deposit bonus banners, and responsive navigation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
