@@ -16,6 +16,14 @@ export function normalizeImageUrl(rawUrl?: string): string {
     url = url.replace('/src/assets/images/', '/images/');
   }
 
+  // Handle missing local /images/ paths that cause 404 image errors
+  if (url.startsWith('/images/')) {
+    if (url.includes('aviator')) return DEFAULT_AVIATOR_IMAGE;
+    if (url.includes('wingo')) return DEFAULT_WINGO_IMAGE;
+    if (url.includes('diamond') || url.includes('vault') || url.includes('gold')) return DEFAULT_DIAMOND_IMAGE;
+    return DEFAULT_FALLBACK_IMAGE;
+  }
+
   // Upgrade insecure http:// to https:// to prevent mixed-content blocks in WhatsApp / in-app webviews
   if (url.startsWith('http://')) {
     url = url.replace('http://', 'https://');
